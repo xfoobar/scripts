@@ -24,9 +24,9 @@ alias md='mkdir -p'
 alias docker='podman'
 alias pm-il='podman images'
 alias pm-cl='podman ps -a'
-alias pm-ra='podman rm --all'
-alias pm-ri='podman rmi'
-alias pm-clean='podman container prune && podman volume prune'
+alias pm-rma='podman rm --all'
+alias pm-rmi='podman rmi'
+alias pm-cv='podman container prune && podman volume prune'
 alias pm-cdl='podman rmi $(podman images -f "dangling=true" -q)'
 
 # git
