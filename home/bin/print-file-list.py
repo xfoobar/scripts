@@ -2,27 +2,26 @@
 import sys
 from common import eprint
 from pathlib import Path
+import argparse
 
 
 
-def init():
-    if not len(sys.argv)-1 in (1,2):
-        eprint('Invalid number of arguments')
-        sys.exit(1)
-    tdir = Path(sys.argv[1])
-    if not tdir.is_dir():
-        eprint(f'No such directory:{tdir}')
-        sys.exit(2)
+def args_init():
+    parser = argparse.ArgumentParser(description='print file list')
+    parser.add_argument('path', type=str,help='target directory')
+    parser.add_argument('-f','--filter', type=str,required=False,help='file filter')
+    args = parser.parse_args()
+    return args
 
-def print_files(path:Path,err:bool,wildcard:str=None):
+def print_files(path:Path,err:bool,file_filter:str=None):
     try:
-        if wildcard:
-            d=path.rglob(wildcard)
+        if file_filter:
+            d=path.rglob(file_filter)
         else:
             d=path.iterdir()
         for f in d:
             if f.is_dir():
-                print_files(f,err,wildcard)
+                print_files(f,err,file_filter)
             else:
                 print(f)
     except Exception as e:
@@ -32,16 +31,12 @@ def print_files(path:Path,err:bool,wildcard:str=None):
 
 def main():
     err=False
-    tdir = Path(sys.argv[1])
-    if len(sys.argv)-1==2:
-        wc=sys.argv[2]
-    else:
-        wc=None
-    print_files(tdir,err,wc)
-    print(tdir,err,wc)
+    args=args_init()
+    tdir=Path(args.path)
+    file_filter=args.filter
+    print_files(tdir,err,file_filter)
     if err:
-        sys.exit(3)
+        sys.exit(1)
 
 if __name__ == '__main__':
-    init()
     main()
